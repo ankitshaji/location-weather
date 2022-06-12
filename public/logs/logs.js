@@ -1,6 +1,6 @@
 //Client-side
 
-//Get Request
+//Get Request to server
 getData();
 async function getData() {
   const response = await fetch("/api");
