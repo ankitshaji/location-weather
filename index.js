@@ -40,15 +40,28 @@ app.post("/api", (req, res) => {
 });
 
 //Server accepts get request from client
-//-proxy - send another get request to openweathermapAPI
+//Getting api parameters lat lon
 app.get("/weather/:latlon", async (req, res) => {
   //console.log(req.params);
   const latlon = req.params.latlon.split(",");
   const lat = latlon[0];
   const lon = latlon[1];
-  const api_url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=88c2effb12e5ac44a65f792548034497`;
-  //send second get request to openweathermapAPI
-  const response1 = await fetch(api_url);
-  const json1 = await response1.json();
-  res.json(json1);
+
+  //proxy - Send second get request to openweathermapAPI
+  const weather_url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=88c2effb12e5ac44a65f792548034497`;
+  const weather_response = await fetch(weather_url);
+  const weather_json = await weather_response.json();
+
+  //Send get request to openaqAPI
+  const air_url = `https://api.openaq.org/v2/latest?coordinates=${lat},${lon}`;
+  const air_response = await fetch(air_url);
+  const air_json = await air_response.json();
+
+  //combine both responsese into object
+  const data = {
+    weather: weather_json,
+    air: air_json,
+  };
+
+  res.json(data);
 });
