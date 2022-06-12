@@ -11,7 +11,13 @@ document.getElementById("b1").addEventListener("click", (event) => {
       document.getElementById("lat").textContent = lat;
       document.getElementById("lon").textContent = lon;
 
-      //POST Request
+      // Get Request to server - proxy - openweathermapAPI
+      const api_url = `/weather/${lat},${lon}`;
+      const response1 = await fetch(api_url);
+      const json1 = await response1.json();
+      console.log(json1);
+
+      //POST Request to server
       const data = { lat, lon };
       const options = {
         method: "POST",
@@ -20,9 +26,9 @@ document.getElementById("b1").addEventListener("click", (event) => {
         },
         body: JSON.stringify(data),
       };
-      const response = await fetch("/api", options);
-      const json = await response.json();
-      console.log(data);
+      const response2 = await fetch("/api", options);
+      const json2 = await response2.json();
+      //console.log(json2);
     });
   } else {
     console.log("geolocation not available");
