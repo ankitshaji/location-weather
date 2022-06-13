@@ -5,9 +5,10 @@ if ("geolocation" in navigator) {
 
   //async callback function
   navigator.geolocation.getCurrentPosition(async (position) => {
+    let lat, lon, weather, air;
     try {
-      const lat = position.coords.latitude;
-      const lon = position.coords.longitude;
+      lat = position.coords.latitude;
+      lon = position.coords.longitude;
       document.getElementById("lat").textContent = lat;
       document.getElementById("lon").textContent = lon;
 
@@ -16,8 +17,8 @@ if ("geolocation" in navigator) {
       const api_url = `/weather/${lat},${lon}`;
       const response1 = await fetch(api_url);
       const json1 = await response1.json();
-      const weather = json1.weather;
-      const air = json1.air.results[0].measurements[0];
+      weather = json1.weather;
+      air = json1.air.results[0].measurements[0];
 
       //Display on webpage
       document.getElementById("summary").textContent =
@@ -27,22 +28,23 @@ if ("geolocation" in navigator) {
       document.getElementById("aq_value").textContent = air.value;
       document.getElementById("aq_unit").textContent = air.unit;
       document.getElementById("aq_date").textContent = air.lastUpdated;
-
-      //POST Request to server -update database
-      const data = { lat, lon, weather, air };
-      const options = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      };
-      const response2 = await fetch("/api", options);
-      const json2 = await response2.json();
-      console.log(json2);
     } catch (err) {
-      console.log("Error found :", err.message);
+      air = { value: -1 };
+      document.getElementById('aq_value').textContent ="No Reading"
     }
+
+    //POST Request to server -update database
+    const data = { lat, lon, weather, air };
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    };
+    const response2 = await fetch("/api", options);
+    const json2 = await response2.json();
+    console.log(json2);
   });
 } else {
   console.log("geolocation not available");
