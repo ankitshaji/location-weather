@@ -2,9 +2,12 @@
 //npm install express
 //npm install nedb
 //npm install node-fetch@2.6.0
+//npm install dotenv
+
 const Datastore = require("nedb");
 const express = require("express");
 const fetch = require("node-fetch");
+require("dotenv").config();
 
 const app = express();
 app.listen(3000, () => console.log("listning at 3000"));
@@ -48,7 +51,9 @@ app.get("/weather/:latlon", async (req, res) => {
   const lon = latlon[1];
 
   //proxy - Send second get request to openweathermapAPI
-  const weather_url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=88c2effb12e5ac44a65f792548034497&units=metric`;
+  //API_KEY in .env -> process.env
+  const api_key = process.env.API_KEY;
+  const weather_url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${api_key}&units=metric`;
   const weather_response = await fetch(weather_url);
   const weather_json = await weather_response.json();
 
