@@ -10,7 +10,8 @@ const fetch = require("node-fetch");
 require("dotenv").config();
 
 const app = express();
-app.listen(3000, () => console.log("listning at 3000"));
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log(`listning at ${port}`));
 
 //server understands static and json
 app.use(express.static("public"));
